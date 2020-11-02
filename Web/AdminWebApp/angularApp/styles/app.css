@@ -1,0 +1,7 @@
+a {
+    color: #03A9F4;
+}
+.dashboardtabcolumn {
+    flex-grow: 1;
+    flex-basis: 0;
+}

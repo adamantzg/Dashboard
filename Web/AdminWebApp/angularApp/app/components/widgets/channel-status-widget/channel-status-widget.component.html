@@ -1,0 +1,8 @@
+<button class="btn btn-sm mb-2" [ngClass]="{ 'btn-warning': running, 'btn-primary': !running}" (click)="startStop()">{{startStopText}}</button>
+<tabset>
+    <tab *ngFor="let s of channelServices" [heading]="s.country" (selectTab)="onTabSelect($event)">
+        <ng-container *ngIf="tabsSelected[s.country]">
+            <app-channel-list [serviceData]="s"></app-channel-list>
+        </ng-container>
+    </tab>
+</tabset>

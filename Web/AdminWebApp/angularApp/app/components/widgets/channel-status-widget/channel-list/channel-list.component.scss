@@ -1,0 +1,41 @@
+.running {
+    background-color: lime;
+  }
+  
+  .down {
+    background-color: maroon;
+    color: silver;
+  }
+  
+  .white-space-pre {
+    white-space: pre-wrap;
+  }
+  
+  .pull-up
+  {
+    padding-top: 5px;
+  }
+  
+  .cover {
+    float: left;
+    border: 1px solid grey;
+    padding: 2px;
+    margin: 2px;
+  }
+  
+  .cover-ok {
+    background-color: lime;
+  }
+  
+  .cover-fair {
+    background-color: yellowgreen;
+  }
+  
+  .cover-some {
+    background-color: yellow;
+  }
+  
+  .cover-bad {
+    background-color: maroon;
+    color: silver;
+  }

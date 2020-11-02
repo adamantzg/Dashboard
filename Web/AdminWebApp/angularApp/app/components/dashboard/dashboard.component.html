@@ -1,0 +1,28 @@
+<div class="animated fadeIn">
+   
+    <div class="row">
+      <div class="col-md-12"> 
+        <app-errormessage [errorMessage]="errorMessage"></app-errormessage>
+        <div class="mb-2 mt-2" *ngIf="inDesign">
+          <button class="btn btn-sm btn-primary" (click)="addTab()">Add tab</button>
+          <button class="ml-2 btn btn-sm btn-success" (click)="saveLayout()">Save layout</button>
+        </div>        
+        <tabset>
+          <ng-container *ngFor="let t of tabs">
+            <!-- <tab (selectTab)="onTabSelect($event)" [id]="t.id" *ngIf="t.id != addTabId || inDesign">
+              <ng-template tabHeading><i *ngIf="inDesign && t.id == addTabId" class="fa fa-plus"></i> 
+                {{t.name}} <i *ngIf="inDesign && t.id != addTabId" class="fa fa-remove"></i></ng-template>
+              <app-dashboardtab *ngIf="t.id != addTabId" [Data]="t"></app-dashboardtab>
+            </tab> -->
+            <tab [removable]="inDesign" [id]="t.id" (removed)="onTabRemoved($event)">              
+              <ng-template tabHeading><span *ngIf="edit.editedTitleId == t.id">
+                <input class="input-sm" [(ngModel)]="edit.editedTitle" (input)="onTitleChanged($event)"
+                 (keydown)="onTitleEditKeyDown($event)"></span>
+                <span *ngIf="edit.editedTitleId != t.id" (dblclick)="onTitleStartEdit(t.id)">{{t.name}}</span></ng-template>
+              <app-dashboardtab [Data]="t" [InDesign]="inDesign" (LayoutChanged)="onTabLayoutChanged($event)"></app-dashboardtab>
+            </tab>
+          </ng-container>
+        </tabset>
+      </div><!--/.col-->
+    </div><!--/.row-->
+  </div>

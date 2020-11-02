@@ -1,0 +1,14 @@
+<div *ngIf="!multiple" class="form-group">
+    <label>Agent:</label>
+    <select [(ngModel)]="selected" class="form-control" name="agent" (change)="onDescriptorSelected()">
+        <option *ngFor="let d of descriptors" [value]="d.id">{{d.id}} {{d.clientName}} - {{d.machineName}} l:{{d.localPort}}>>r:{{d.remotePort}} </option>
+    </select>
+</div>
+<div *ngIf="multiple" class="form-group">
+    <pagination [totalItems]="descriptors.length" [itemsPerPage]="pageSize" *ngIf="descriptors.length > pageSize" [(ngModel)]="page" [maxSize]="9"
+        (pageChanged)="pageChanged($event)"></pagination>  
+    <div class="form-check form-check-inline" *ngFor="let d of pagedDescriptors">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="d.selected" (change)="OnChecked(d)">
+        <label class="form-check-label" >{{d.id}} {{d.clientName}} - {{d.machineName}} l:{{d.localPort}}>>r:{{d.remotePort}}</label>
+    </div>
+</div>

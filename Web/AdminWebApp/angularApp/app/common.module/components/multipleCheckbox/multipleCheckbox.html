@@ -1,0 +1,5 @@
+<span *ngFor="let obj of data">
+        <input type="checkbox" [(ngModel)]="obj[selectedField]"
+        [name]="obj[idField].toString()"> 
+        {{obj[displayField]}}
+</span>

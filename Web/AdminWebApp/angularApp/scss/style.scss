@@ -1,0 +1,15 @@
+// If you want to override variables do it here
+@import "variables";
+
+// Import styles
+@import "~@coreui/coreui/scss/coreui";
+
+// If you want to add something do it here
+@import "custom";
+
+.router-link-active {
+    font-weight: bold;
+}
+.modal-xxl {
+    max-width: 1200px;
+}

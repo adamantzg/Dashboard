@@ -1,0 +1,24 @@
+<div class="card">
+    <app-widgetheader [title]="data.title" (ActionSelected)="onAction($event)"></app-widgetheader>
+    <div class="card-body">      
+      <app-errormessage  [errorMessage]="errorMessage"></app-errormessage>
+      <h4>List of registered agents on {{descriptorsModel?.registrationWebAppUrl}}</h4>
+      <button class="btn btn-sm btn-primary mb-2" (click)="refresh()">Refresh</button>
+      <app-grid [definition]="gridDefinition" [data]="descriptorsModel?.descriptors" (ButtonClicked)="gridButtonClicked($event)" 
+      [editMode]="editMode" [editedRow]="descriptorCopy" (SortChange)="onGridSortChange($event)" ></app-grid>
+    </div>
+  </div>
+  <!-- <ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Info</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Title:</label>
+        <input type="text" class="form-control" [(ngModel)]="data.title" name="title">
+      </div>
+    </div>
+  </ng-template> -->

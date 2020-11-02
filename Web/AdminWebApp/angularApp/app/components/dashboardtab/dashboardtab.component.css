@@ -1,0 +1,9 @@
+.dashboardtabcolumn {
+    border-right: 1px solid gray;
+    padding-right: 5px;
+}
+
+.tabcommands {
+    font-size: 0.9em;
+}
+

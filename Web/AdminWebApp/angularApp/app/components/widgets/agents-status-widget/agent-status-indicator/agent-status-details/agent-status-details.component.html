@@ -1,0 +1,23 @@
+<ng-container *ngIf="data">
+    <table class="table mt-2">
+        <tbody>
+            <tr>
+                <td style="width: 20%;">Total files:</td>
+                <td>{{data.status.totalFiles}}</td>
+            </tr>
+            <tr *ngIf="data.status.lastError">
+                <td>Last Error:</td>
+                <td>{{data.status.lastError}}</td>
+            </tr>
+            <tr>
+                <td>Last active:</td>
+                <td>{{data.descriptor.lastActive | date:dateFormat}}</td>
+            </tr>
+        </tbody>
+    </table>    
+    <pagination *ngIf="data.status.channelStatuses.length > pageSize" 
+        [totalItems]="data.status.channelStatuses.length" [maxSize]="10" [itemsPerPage]="pageSize" [(ngModel)]="page"
+    (pageChanged)="onPageChanged($event)" ></pagination>
+    <app-grid [css]="'table table-sm'" [data]="pagedChannels" [definition]="gridDefinition" (SortChange)="onSortChanged($event)"></app-grid>
+</ng-container>
+

@@ -1,0 +1,41 @@
+﻿@page
+@using AdminWebApp.Pages
+@using System.IO
+@{
+    Layout = null;
+}
+@model IndexModel
+
+<!doctype html>
+<html>
+<head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <title>Remote admin tools</title>
+    @{
+        
+        var files = Directory.GetFiles(System.IO.Path.Combine(Model.WebRoot, "dist"), "*.css");
+
+        foreach (var f in files)
+        {
+            <link rel="stylesheet" href="~/dist/@(System.IO.Path.GetFileName(f))"/>
+        }
+    }
+</head>
+<body class="app">
+    <!-- App Loading... -->
+    <app-component></app-component>
+    @{
+        var jsFiles = Directory.GetFiles(System.IO.Path.Combine(Model.WebRoot, "dist"), "*.js").OrderBy(f => f.Contains("polyfills") ? 0 : f.Contains("vendor") ? 1 : 2);
+
+        foreach (var f in jsFiles)
+        {
+            <script src="~/dist/@(System.IO.Path.GetFileName(f))"></script>
+        }
+    }
+</body>
+
+</html>

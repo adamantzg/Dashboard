@@ -1,0 +1,12 @@
+<div class="card-header">
+    {{title}}
+    <div class="btn-group float-right" dropdown>
+      <button type="button" class="btn dropdown-toggle p-0" dropdownToggle>
+        <i class="icon-settings"></i>
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" *dropdownMenu>        
+        <a class="dropdown-item" href="#" *ngFor="let a of actions" (click)="onAction(a)">{{a.title}}</a>
+        <a class="dropdown-item" href="#" (click)="openSettings()">Settings</a>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,146 @@
+<form [formGroup]="form">
+<div [ngStyle]="style">
+        <table [class]="css" style="margin-bottom: 0px">
+            <thead>
+            <tr>
+                <ng-container *ngFor="let c of definition?.columns">
+                    <th *ngIf="checkColumnVisibility(c)" [ngStyle]="c.style" >
+                        <span *ngIf="c.sortable"><a style="cursor: pointer;" (click)="toggleSort(c)">{{c.title}}</a></span>
+                        <span *ngIf="!c.sortable"><span *ngIf="c.type != columnTypes.Button && c.type != columnTypes.ButtonGroup">{{c.title}}</span></span>
+                        <input type="checkbox" *ngIf="c.type == columnTypes.Checkbox" (change)="toggleValue(c)" [(ngModel)]="c.selected" [formControlName]="c.name">
+                        <span *ngIf="checkSort(c)">
+                            <i (click)="toggleSort(c)" [ngClass]="getSortIconClass(c)"></i>                    
+                        </span>                
+                    </th>
+                </ng-container>                
+            </tr>
+            </thead>        
+                <ng-container *ngIf="!definition?.fixedHeaders">
+                    <ng-container *ngTemplateOutlet="bodytemplate">
+                    </ng-container>  
+                </ng-container>
+        </table>
+        <div *ngIf="definition?.fixedHeaders" [ngStyle]="fixedHeaderStyle">
+        <table class="table" style="margin-top:0px">
+            <ng-container *ngTemplateOutlet="bodytemplate">
+            </ng-container>  
+        </table>
+        </div>
+    
+    <ng-template #bodytemplate>
+      <tbody>
+          <ng-container *ngIf="editMode == editModes.AddNew">
+              <ng-container *ngTemplateOutlet="editRowTemplate;context:{$implicit: editedRow}"></ng-container>
+          </ng-container>
+          <ng-container *ngFor="let d of data">
+            <ng-container *ngIf="editMode == editModes.Edit && d[keyField] == editedRow[keyField]">
+                <ng-container *ngTemplateOutlet="editRowTemplate;context:{$implicit: editedRow}"></ng-container>
+            </ng-container>
+            <tr *ngIf="editMode != editModes.Edit || d[keyField] != editedRow[keyField]">
+                <ng-container *ngFor="let c of definition?.columns">
+                        <td *ngIf="checkColumnVisibility(c)" [ngStyle]="c.style">
+                                <span *ngIf="c.type == columnTypes.Label">
+                                    {{getValue(d,c) | columnFormat:c.dataType:c.format}}
+                                </span>
+                                <span *ngIf="c.type == columnTypes.Checkbox"><input type="checkbox" [formControlName]="c.name"  [(ngModel)]="d[c.field]"></span>
+                                <span *ngIf="c.type == columnTypes.Button">
+                                    <button class="btn btn-default" type="button" [ngClass]="c.buttonCss" (click)="buttonClicked(d, c, c.name)" *ngIf="checkColumnButtonVisibility(d,c, c.name)">
+                                        <i *ngIf="c.buttonIcon" [ngClass]="'fa ' + c.buttonIcon"></i>
+                                        {{c.title}}
+                                    </button>
+                                </span>
+                                <span *ngIf="c.type == columnTypes.ButtonGroup">
+                                        <ng-container *ngFor="let b of c.buttons">
+                                            <button class="btn btn-default" type="button" [ngClass]="b.css" (click)="buttonClicked(d, c, b)" 
+                                            *ngIf="checkColumnButtonVisibility(d,c, b.name)" [disabled]="checkColumnGroupDisabledStatus(d, c, b.name)">
+                                                    <i *ngIf="b.icon" [ngClass]="'fa ' + b.icon"></i>
+                                                    {{b.text}}
+                                            </button>
+                                        </ng-container>                        
+                                </span>
+                                <span *ngIf="c.type == columnTypes.Custom"><app-customcolumn [row]="d" [column]="c" (CustomColumnEvent)="onCustomColumnEvent($event, d)"></app-customcolumn></span>
+                                <span *ngIf="c.type == columnTypes.Checkmark">
+                                    <span *ngIf="d[c.field]==true" class="glyphicon glyphicon-ok"></span>
+                                </span>
+                            </td>   
+                </ng-container>
+                       
+            </tr>
+          </ng-container>
+          
+        </tbody>  
+    </ng-template>
+    <ng-template #editRowTemplate let-row> 
+        <tr>
+            <ng-container *ngFor="let c of definition?.columns">
+                <td *ngIf="checkColumnVisibility(c)" [ngStyle]="c.style">
+                        <span *ngIf="c.editable && checkColumnEditorVisibilityStatus(row,c) && c.editorType == editorTypes.Textbox">
+                                <input  type="text" [placeholder]="c.title" [required]="c.required" [formControlName]="c.name"                     
+                                [name]="c.field" [class.has-error]="editValidation && form.get(c.name).invalid" class="form-control input-sm"
+                                 [(ngModel)]="row[c.field]"> 
+                        </span>
+                        <span *ngIf="c.editable  && checkColumnEditorVisibilityStatus(row,c) && c.editorType == editorTypes.Dropdown">
+                            <select [(ngModel)]="row[c.selectedValueField]" class="form-control input-sm" [formControlName]="c.name" 
+                            >
+                                <option *ngFor="let o of c.dropdownData" [value]="o[c.valueField]">{{o[c.displayField]}}</option>
+                            </select>
+                        </span>
+                        <span *ngIf="c.editable && checkColumnEditorVisibilityStatus(row,c) && c.editorType == editorTypes.Checkbox">
+                            <input type="checkbox" [(ngModel)]="row[c.field]" [formControlName]="c.name"></span>
+                        <span *ngIf="c.type == columnTypes.Button">
+                            <button class="btn btn-default" type="button" [ngClass]="c.buttonCss" (click)="buttonClicked(row, c)" *ngIf="checkColumnButtonVisibility(row,c, c.name)">
+                                <i *ngIf="c.buttonIcon" [ngClass]="'fa ' + c.buttonIcon"></i>
+                                {{c.title}}
+                            </button>
+                        </span>
+                        <span *ngIf="c.editable && checkColumnEditorVisibilityStatus(row,c) && c.editorType == editorTypes.Autocomplete">
+                            <div class="input-group" >
+                                    <input [(ngModel)]="row[c.field]"
+                                    [typeahead]="c.autoCompleteData.data"
+                                    (typeaheadOnSelect)="onAutoCompleteSelected(c, $event)"
+                                    [typeaheadOptionsLimit]="c.autoCompleteData.optionsLimit"
+                                    (typeaheadLoading)="onAutoCompleteLoading(c, $event)"
+                                    [typeaheadMinLength]="c.autoCompleteData.minLength"            
+                                    [typeaheadOptionField]="c.autoCompleteData.optionField"
+                                    [class.has-error]="editValidation && form.get(c.name).invalid"
+                                    [placeholder]="c.title"
+                                    [name]="c.name" class="form-control input-sm" 
+                                    [formControlName]="c.name"
+                                    >                                                   
+                                    
+                                </div>
+                        </span>
+                        <span *ngIf="c.type == columnTypes.ButtonGroup">
+                                <span *ngFor="let b of c.buttons">
+                                    <button class="btn btn-default" type="button" [ngClass]="b.css" (click)="buttonClicked(row, c, b)" 
+                                    *ngIf="checkColumnButtonVisibility(row,c, b.name)" [disabled]="checkColumnGroupDisabledStatus(row, c, b.name)">
+                                            <i *ngIf="b.icon" [ngClass]="'fa ' + b.icon"></i>
+                                            {{b.text}}
+                                    </button>
+                                </span>                        
+                        </span>
+                        
+                        <span *ngIf="c.editable && checkColumnEditorVisibilityStatus(row,c) && c.editorType == editorTypes.MultipleChoiceTagInput">
+                            <tag-input [ngModel]="row[c.field]" [onlyFromAutocomplete]="c.multipleSelectionData.autocompleteOnly" 
+                            [identifyBy]="c.multipleSelectionData.idField"  [displayBy]="c.multipleSelectionData.displayField"
+                             [placeholder]="c.multipleSelectionData.placeHolder" [formControlName]="c.name">
+                               <tag-input-dropdown *ngIf="c.multipleSelectionData.autocompleteItems" 
+                               [autocompleteItems]="c.multipleSelectionData.autocompleteItems" 
+                               [identifyBy]="c.multipleSelectionData.idField"
+                            [displayBy]="c.multipleSelectionData.displayField">                                
+                            </tag-input-dropdown>                           
+                            </tag-input>
+                        </span>
+                        <span *ngIf="c.editable && checkColumnEditorVisibilityStatus(row,c) && c.editorType == editorTypes.MultipleChoiceCheckboxes">
+                            <multiple-checkbox [data]="row[c.field]"></multiple-checkbox>
+                        </span>
+                        <span *ngIf="(!c.editable || !checkColumnEditorVisibilityStatus(row,c)) && c.type == columnTypes.Label">
+                            {{getValue(row, c) | columnFormat:c.dataType:c.format}}
+                        </span>
+                    </td>  
+            </ng-container>
+            
+        </tr>
+    </ng-template>
+</div>
+</form>

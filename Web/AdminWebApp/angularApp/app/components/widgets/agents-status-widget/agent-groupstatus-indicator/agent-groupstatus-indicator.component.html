@@ -1,0 +1,16 @@
+<div class="d-flex">
+    <div><i class="fa ml-2" [ngClass]="{'fa-plus-square' : !expanded, 'fa-minus-square' : expanded}" style="cursor:pointer"
+      (click)="expanded = !expanded"
+      ></i></div>
+    <ng-container *ngIf="!expanded">
+      <app-agent-status-indicator *ngFor="let d of data?.descriptors" class="ml-2"
+      [data]="{ descriptor: d, interval: data.refreshInterval, showDescriptorInfo: true}"
+      (LastActiveTimeUpdated)="onLastActiveTimeUpdated($event)"
+      ></app-agent-status-indicator>
+    </ng-container>
+    <ng-container *ngIf="expanded">
+        <div class="ml-2" style="width: 100%;">
+            <app-grid [css]="'table table-sm table-bordered'" [style]="{width: '100%'}" [data]="data?.descriptors" [definition]="gridDefinition" (SortChange)="onSortChange($event)" (CustomColumnEvent)="onCustomColumnEvent($event)"></app-grid>
+        </div>        
+    </ng-container>
+</div>

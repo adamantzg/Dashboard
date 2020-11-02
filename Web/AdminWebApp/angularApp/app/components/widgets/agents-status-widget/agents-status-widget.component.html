@@ -1,0 +1,19 @@
+<div class="card">
+    <app-widgetheader [title]="data.title" [actions]="data.actions" (ActionSelected)="onAction($event)"></app-widgetheader>
+    <div class="card-body">
+      <app-errormessage  [errorMessage]="errorMessage"></app-errormessage>
+      <button class="btn btn-sm btn-primary mb-2" (click)="refresh()">Refresh</button>      
+      <div *ngIf="data.settingsObj?.groupBy?.length == 0">
+        <app-grid [data]="selectedDescriptors" [css]="'table table-sm table-bordered'" [definition]="flatGridDefinition" (SortChange)="onFlatGridSortChanged($event)" 
+        (CustomColumnEvent)="onCustomColumnEvent($event)">
+        </app-grid>       
+      </div>
+      <div *ngIf="data.settingsObj?.groupBy?.length > 0">
+        <app-grid [definition]="groupGridMainDef" [data]="groupedDescriptors" (SortChange)="onGroupGridSortChanged($event)" [css]="'table table-sm table-bordered'"
+        (CustomColumnEvent)="onCustomColumnEvent($event)"
+        ></app-grid>
+        
+      </div>     
+      
+    </div>
+  </div>

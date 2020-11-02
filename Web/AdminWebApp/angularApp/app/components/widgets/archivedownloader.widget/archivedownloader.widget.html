@@ -1,0 +1,7 @@
+<div class="card">
+    <app-widgetheader [title]="data.title" [actions]="data.actions" (ActionSelected)="onAction($event)"></app-widgetheader>
+    <div class="card-body">
+      <app-errormessage  [errorMessage]="errorMessage"></app-errormessage>
+      <div *ngIf="statusMessage">{{statusMessage}}</div>
+    </div>
+  </div>

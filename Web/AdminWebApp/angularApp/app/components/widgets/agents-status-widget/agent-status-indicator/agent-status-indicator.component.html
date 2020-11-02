@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-center" [ngClass]="{'checkingimg' : inCheck}" style="cursor: pointer;" (click)="showDetails()">
+    <div *ngIf="!status" [title]="getTitle(inCheck ? 'Checking...' : 'Not running')">
+        <img src="assets/img/black.png">
+    </div>
+    <div *ngIf="status && status.lastError" [title]="getTitle(inCheck ? 'Checking...' : status.lastError)">
+        <img src="assets/img/red.png">
+    </div>
+    <div *ngIf="status && !status.lastError && delay == delayValues.noDelay" 
+        [title]="getTitle(inCheck ? 'Checking...' : 'Up to date' + (lastChecked ? ' ' + lastChecked : ''))">
+        <img src="assets/img/green.png">
+    </div>
+    <div *ngIf="status && !status.lastError && delay == delayValues.small" [title]="getTitle(inCheck ? 'Checking...' : 'Almost finished')">
+        <img src="assets/img/cyan.png">
+    </div>
+    <div *ngIf="status && !status.lastError && delay == delayValues.big" [title]="getTitle(inCheck ? 'Checking...' : getOperation() + ' - ' + filesToGo + ' files to go.')">
+        <img src="assets/img/yellow.png">
+    </div>
+    <!-- <div class="animation_container ml-2" [title]="lastChecked">
+        <div class="checkedText checking mt-2" *ngIf="inCheck">Checking status...</div>
+    </div>     -->
+    <!-- <div class="ml-2 checkedText" *ngIf="lastChecked && !inCheck">{{lastChecked}}</div> -->
+</div>

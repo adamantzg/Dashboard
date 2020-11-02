@@ -1,0 +1,73 @@
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title pull-left">Channel details</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <app-errormessage [errorMessage]="errorMessage"></app-errormessage>
+            <form>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Name:</label>
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control"
+                      readonly
+                      [value]="status.stationName"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">URL:</label>
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      name="url"
+                      [(ngModel)]="status.url"
+                      class="form-control"
+                    />
+                  </div>          
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label">Target folder:</label>
+                  <div class="col-sm-9">
+                    <input
+                      type="text"
+                      readonly
+                      class="form-control"
+                      [value]="status.outputDirectory"
+                    />
+                  </div>
+                </div>
+                <div class="mt-2">
+                    <button class="btn btn-success" (click)="save()">Save</button>
+                    <button class="btn btn-danger ml-2" (click)="close()">Close</button>
+                </div>        
+              </form>
+              <div class="mt-2">
+                 <div class="row" >
+                     <div class="col-sm-2 col-form-label">Log</div>
+                     <div class="col-sm-6">
+                        <button (click)="fetchLog()" class="btn btn-primary">Refresh log</button>
+                     </div>
+                 </div>
+              </div>
+              <table class="table table-striped table-sm mt-2">
+                <thead>
+                  <th>Time</th>
+                  <th>Message</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let logEntry of slicedLog">
+                        <td>{{ logEntry.timeOfEntry | date: "mediumTime" }}</td>
+                        <td class="white-space-pre">{{ logEntry.message }}</td>
+                    </tr>
+                </tbody>
+                
+              </table>
+        </div>        
+    </div>
+

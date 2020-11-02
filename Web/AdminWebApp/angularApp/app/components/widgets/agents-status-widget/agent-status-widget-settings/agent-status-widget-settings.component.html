@@ -1,0 +1,18 @@
+<form class="form">
+    <div class="form-group">
+        <label>Title:</label>
+        <input type="text" class="form-control" [(ngModel)]="widget.title" name="title">
+    </div>
+    <div class="form-group">
+        <label>Refresh interval (s): </label>
+        <input type="number" name="refreshInterval" class="form-control" [(ngModel)]="widget.settingsObj.refreshInterval">
+    </div>
+    <div class="form-check form-check-inline mb-4">
+        <input class="form-check-input" type="checkbox" name="groupBy" [(ngModel)]="widget.settingsObj.groupByServer">
+        <label class="form-check-label">Group by server</label>
+    </div>
+    <app-descriptor-picker [multiple]="true" 
+        [selectedDescriptorIds]="widget?.settingsObj?.descriptorIds" 
+        (selectionChanged)="onDescriptorPickerSelectionChanged($event)"></app-descriptor-picker>
+    
+</form>

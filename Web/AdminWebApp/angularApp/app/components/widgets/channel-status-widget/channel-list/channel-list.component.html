@@ -1,0 +1,33 @@
+<app-errormessage [errorMessage]="errorMessage"></app-errormessage>
+<div class="lead">
+    Total: {{ total }} | Running: {{ running }} | Down: {{ down }}
+  </div>
+  <table class="table">
+    <thead>
+      <td>domain</td>
+      <td>Station Name</td>
+      <td>Running Time</td>
+      <td>Covered</td>
+      <td>Commands</td>
+    </thead>
+  
+    <ng-container *ngFor="let s of streamStatuses">
+      <tr [ngClass]="s.getStatus()">
+        <td>{{ s.domain }}</td>
+        <td>{{ s.stationName }}</td>
+        <td>{{ s.elapsedTime }}</td>
+        <td>
+          <div [ngClass]="getCoverageClass(s,0)">1h</div>
+          <div [ngClass]="getCoverageClass(s,1)">1d</div>
+          <div [ngClass]="getCoverageClass(s,2)">7d</div>
+        </td>
+        <td>
+          <div>
+            <button class="btn btn-light" (click)="showDetails(s)">
+              Details
+            </button>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+  </table>

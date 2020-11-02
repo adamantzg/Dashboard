@@ -1,0 +1,45 @@
+<ng-container *ngIf="InDesign">
+    <div class="form-inline tabcommands">
+        <label>Columns:</label>
+        <button class="btn btn-sm btn-primary ml-2 mr-2" (click)="changeColumns(-1)">
+            <i class="fa fa-minus"></i>
+        </button> {{Data.columns}} 
+        <button class="btn btn-sm btn-primary ml-2" (click)="changeColumns(1)">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+    <hr>
+</ng-container>
+
+<div class="d-flex" style="min-height: 70vh;">    
+    <div *ngFor="let c of columns, let ix = index" [ngStyle]="{ width: getTabColumnWidth()}"  [ngClass]="ix != columns.length - 1 ? 'dashboardtabcolumn' : ''">
+        <ng-container *ngIf="InDesign">
+            <div class="btn-group float-right mb-2" dropdown>
+                <button class="btn btn-sm btn-success" dropdownToggle type="button" ><i class="fa fa-plus"></i></button>                
+                <ul *dropdownMenu class="dropdown-menu" [ngClass]="{'dropdown-menu-right' : ix == columns.length - 1}">
+                    <li *ngFor="let t of types" role="menuitem">
+                        <a class="dropdown-item" (click)="addWidget(ix, t)" href="#">{{t.name}}</a>
+                    </li>
+                </ul>
+            </div>
+        </ng-container>
+        
+        <div *ngFor="let w of c" style="clear: both;" class="ml-2">
+            <div class="float-right ml-2 mb-2" *ngIf="InDesign">
+                <button class="btn btn-sm btn-danger" (click)="removeWidget(ix,w)"><i class="fa fa-times"></i></button>
+            </div>
+            <ng-container *ngIf="w.widgetTypeId == WidgetTypes.ArchiveDownloaderAgent">
+                <app-archivedownloader-widget [data]="w"></app-archivedownloader-widget>
+            </ng-container>
+            <ng-container *ngIf="w.widgetTypeId == WidgetTypes.ChannelStatusInfo">
+                <app-channel-status-widget [data]="w"></app-channel-status-widget>
+            </ng-container>
+            <ng-container *ngIf="w.widgetTypeId == WidgetTypes.DescriptorsAdmin">
+                <app-descriptors-admin [data]="w"></app-descriptors-admin>
+            </ng-container> 
+            <ng-container *ngIf="w.widgetTypeId == WidgetTypes.AgentsStatus">
+                <app-agents-status-widget [data]="w"></app-agents-status-widget>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<form class="form">
+    <div class="form-group">
+        <label>Title:</label>
+        <input type="text" class="form-control" [(ngModel)]="widget.title" name="title">
+    </div>
+    <app-descriptor-picker *ngIf="showDescriptors" [selectedDescriptorIds]="widget.settingsObj.descriptorIds" 
+    (selectionChanged)="onDescriptorPickerSelectionChanged($event)"></app-descriptor-picker>
+</form>
+
